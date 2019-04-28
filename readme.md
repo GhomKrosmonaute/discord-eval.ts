@@ -12,14 +12,14 @@ npm install discord-eval.js
 ```js
 DiscordEval( code, message, add )
 ```
-> **code** :  
-> > The code that you emulate  
-> > *Type* : String  
-> **message** :  
-> > The message from which the code comes  
-> > *Type* : Message  
-> **add**  
-> > All that you want to use in emulation  
+**code** :  
+> The code that you emulate  
+> *Type* : String  
+**message** :  
+> The message from which the code comes  
+> *Type* : Message  
+**add**  
+> All that you want to use in emulation  
 
 ## Example
 
