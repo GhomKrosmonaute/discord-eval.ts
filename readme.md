@@ -16,16 +16,17 @@ DiscordEval( code, message, add )
 **code** :  
 
 > The code that you emulate  
-> *Type* : String  
+> **Type** : String  
 
 **message** :  
 
 > The message from which the code comes  
-> *Type* : Message  
+> **Type** : Message  
 
-**add**  
+**add** : 
 
 > All that you want to use in emulation  
+> **Type** : ?  
 
 ## Example
 
