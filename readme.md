@@ -23,11 +23,6 @@ DiscordEval( code, message, add )
 > The message from which the code comes  
 > **Type** : Message  
 
-**add** : 
-
-> All that you want to use in emulation  
-> **Type** : ?  
-
 ## Example
 
 Here is the minimum required for your Eval command to work. **Think of securing access because a malicious Eval can be devastating for your PC !**
