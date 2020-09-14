@@ -1,26 +1,33 @@
 const Discord = require("discord.js");
 const prettify = require("ghom-prettify");
+const codeInBlock = /^```(?:js)?\s(.+[^\\])```$/is;
 
 /**
  * Make an object with eval results
  * @param {string} code
- * @param {Message} message
+ * @param {module:"discord.js".Message} message
  */
 module.exports = async function (code, message) {
-  if(
+  if (
     !code ||
     message.system ||
     message.author.bot ||
-    message.channel.type === 'dm'
-  ) return
+    message.channel.type === "dm"
+  )
+    return;
 
   /**
-   * @type {?Message}
+   * @type {?module:"discord.js".Message}
    */
   let editable = null;
 
-  if (code.includes("resolve") && !code.includes("new Promise")){
-    code = `return await new Promise(resolve => {${code})`
+  code = code.trim();
+  if (codeInBlock.test(code)) {
+    code = code.replace(codeInBlock, "$1");
+  }
+
+  if (code.includes("resolve") && !code.includes("new Promise")) {
+    code = `return await new Promise(resolve => {${code})`;
   }
 
   if (code.includes("await")) {
@@ -47,10 +54,10 @@ module.exports = async function (code, message) {
     classe = out.constructor.name;
   }
 
-  let formatted = code
+  let formatted = code;
   try {
-    formatted = await prettify(code, "js")
-  } catch(err) {}
+    formatted = await prettify(code, "js");
+  } catch (err) {}
 
   let embed = new Discord.MessageEmbed()
     .setTitle(`DiscordEval`)
@@ -63,7 +70,8 @@ module.exports = async function (code, message) {
     )
     .addField(
       `Code ↓`,
-      `\`\`\`js\n${formatted.length > 0 ? formatted : "void"}`.slice(0, 800) + `\n\`\`\``
+      `\`\`\`js\n${formatted.length > 0 ? formatted : "void"}`.slice(0, 800) +
+        `\n\`\`\``
     );
 
   if (editable) {
@@ -76,10 +84,8 @@ module.exports = async function (code, message) {
     embed = new Discord.MessageEmbed();
     embed.setTitle(`Return ↓`);
     embed.setDescription(
-      `\`\`\`js\n${`${out}`.length > 0 ? `${out}` : "void"}`.slice(
-        0,
-        1800
-      ) + `\n\`\`\``
+      `\`\`\`js\n${`${out}`.length > 0 ? `${out}` : "void"}`.slice(0, 1800) +
+        `\n\`\`\``
     );
     await message.channel.send(embed);
   }
