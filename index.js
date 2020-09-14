@@ -24,7 +24,7 @@ module.exports = async function (code, message) {
   }
 
   if (code.includes("await")) {
-    code = `async () => {${code}})`;
+    code = `async () => {${code}}`;
 
     let embed = new Discord.MessageEmbed()
       .setTitle("DiscordEval")
