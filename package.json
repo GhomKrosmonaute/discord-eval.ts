@@ -1,0 +1,34 @@
+{
+  "name": "discord-eval.js",
+  "version": "1.0.3",
+  "description": "An eval command for your Discord bots !",
+  "main": "index.js",
+  "dependencies": {
+    "discord.js": "^12.3.1",
+    "ghom-prettify": "^1.0.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CamilleAbella/DiscordEval.js.git"
+  },
+  "keywords": [
+    "eval",
+    "discord",
+    "bot",
+    "javascript",
+    "js",
+    "code",
+    "code-emulator",
+    "command"
+  ],
+  "author": "ghom",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/CamilleAbella/DiscordEval.js/issues"
+  },
+  "homepage": "https://github.com/CamilleAbella/DiscordEval.js#readme"
+}
