@@ -24,7 +24,7 @@ module.exports = async function (code, message) {
   }
 
   if (code.includes("await")) {
-    code = `async function(){${code}})`;
+    code = `async () => {${code}})`;
 
     let embed = new Discord.MessageEmbed()
       .setTitle("DiscordEval")
@@ -32,12 +32,12 @@ module.exports = async function (code, message) {
 
     editable = await message.channel.send(embed);
   } else {
-    code = `function(){${code}}`;
+    code = `() => {${code}}`;
   }
 
   let out = null;
   try {
-    out = await eval(code);
+    out = await eval(code)();
   } catch (err) {
     out = err;
   }
@@ -72,7 +72,7 @@ module.exports = async function (code, message) {
     await message.channel.send(embed);
   }
 
-  if (code.includes("return") || String(out).includes("Error")) {
+  if (code.includes("return") || `${out}`.includes("Error")) {
     embed = new Discord.MessageEmbed();
     embed.setTitle(`Return ↓`);
     embed.setDescription(
