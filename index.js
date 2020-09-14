@@ -8,13 +8,7 @@ const codeInBlock = /^```(?:js)?\s(.+[^\\])```$/is;
  * @param {module:"discord.js".Message} message
  */
 module.exports = async function (code, message) {
-  if (
-    !code ||
-    message.system ||
-    message.author.bot ||
-    message.channel.type === "dm"
-  )
-    return;
+  if (!code || message.system || message.author.bot) return;
 
   /**
    * @type {?module:"discord.js".Message}
