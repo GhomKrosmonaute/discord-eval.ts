@@ -10,7 +10,7 @@ npm install discord-eval.js
 ## Syntax
 
 ```js
-DiscordEval( code, message, add )
+DiscordEval( code, message )
 ```
 
 **code** :  

@@ -1,6 +1,6 @@
 {
   "name": "discord-eval.js",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "An eval command for your Discord bots !",
   "main": "index.js",
   "dependencies": {
