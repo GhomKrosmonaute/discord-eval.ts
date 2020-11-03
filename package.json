@@ -1,13 +1,12 @@
 {
   "name": "discord-eval.js",
-  "version": "1.0.10",
-  "description": "An eval command for your Discord bots !",
+  "version": "1.0.12",
+  "description": "An JS eval command for your Discord bots !",
   "main": "index.js",
   "dependencies": {
     "discord.js": "^12.3.1",
-    "ghom-prettify": "^1.0.0"
+    "ghom-prettify": "^1.1.1-bite"
   },
-  "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
