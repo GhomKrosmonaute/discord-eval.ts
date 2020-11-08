@@ -59,11 +59,6 @@ module.exports = async function (code, message) {
       `**Classe** : \`\`${classe}\`\`\n` + `**Type** : \`${typeof out}\``
     )
     .addField(
-      `Commande ↓`,
-      `\`\`\`js\n${message.content.replace(/`/g, "\\`")}`.slice(0, 800) +
-        `\n\`\`\``
-    )
-    .addField(
       `Code ↓`,
       `\`\`\`js\n${formatted.length > 0 ? formatted : "void"}`.slice(0, 800) +
         `\n\`\`\``
