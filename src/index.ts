@@ -1,13 +1,9 @@
-const Discord = require("discord.js");
+import Discord from "discord.js"
+
 const prettify = require("ghom-prettify");
 const codeInBlock = /^```(?:js)?\s(.+[^\\])```$/is;
 
-/**
- * Make an object with eval results
- * @param {string} code
- * @param {module:"discord.js".Message} message
- */
-module.exports = async function (code, message) {
+export default async function (code: string, message: Discord.Message): Promise<void> {
   if (!code || message.system || message.author.bot) return;
 
   /**
