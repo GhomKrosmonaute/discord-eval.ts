@@ -1,5 +1,5 @@
 {
-  "name": "discord-eval.js",
+  "name": "discord-eval.ts",
   "version": "1.0.13",
   "description": "An JS eval command for your Discord bots !",
   "main": "dist/index",
