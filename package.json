@@ -1,19 +1,19 @@
 {
-  "name": "discord-eval.ts",
-  "version": "1.0.14",
-  "description": "An JS eval command for your Discord bots !",
+  "name": "ghom-eval",
+  "version": "1.0.0",
+  "description": "JS advanced evaluator",
   "main": "dist/index",
+  "module": "dist/index.js",
   "types": "dist",
   "dependencies": {
-    "discord.js": "^12.3.1",
-    "ghom-prettify": "^1.1.1-bite"
+    "ghom-prettify": "^2.0.1"
   },
   "prettier": {
     "semi": false
   },
   "scripts": {
     "build": "tsc",
-    "prettier": "prettier --write src"
+    "format": "prettier --write src"
   },
   "repository": {
     "type": "git",
@@ -37,7 +37,6 @@
   "homepage": "https://github.com/CamilleAbella/DiscordEval.js#readme",
   "devDependencies": {
     "@types/node": "^14.14.7",
-    "@types/ws": "^7.4.0",
     "prettier": "^2.1.2",
     "typescript": "^4.0.5"
   }

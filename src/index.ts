@@ -1,86 +1,56 @@
-import Discord from "discord.js"
+import * as prettify from "ghom-prettify"
 
-const prettify = require("ghom-prettify")
-const codeInBlock = /^```(?:js)?\s(.+[^\\])```$/is
+const codeInBlock = /^```(?:js|javascript)?\s(.+[^\\])```$/is
 
-export default async function (
-  code: string,
-  message: Discord.Message,
-  muted: boolean = false
-): Promise<void> {
-  if (!code || message.system || message.author.bot) return
+interface Evaluated {
+  class: string
+  type: string
+  input: string
+  output: string
+  duration: number
+  failed: boolean
+}
 
-  /**
-   * @type {?module:"discord.js".Message}
-   */
-  let editable = null
+export default async function evaluate(code: string): Promise<Evaluated> {
+  code = codeInBlock.test(code) ? code.replace(codeInBlock, "$1") : code.trim()
+  code = /\n|return/.test(code) ? code : `return ${code}`
+  code = `${code.includes("await") ? "async" : ""} () => {${code}}`.trim()
 
-  code = code.trim()
-  if (codeInBlock.test(code)) {
-    code = code.replace(codeInBlock, "$1")
-  }
+  let duration = 0
+  let failed = false
 
-  if (code.includes("resolve") && !code.includes("new Promise")) {
-    code = `return await new Promise(resolve => {${code})`
-  }
-
-  if (code.includes("await")) {
-    code = `async () => {${code}}`
-
-    if (!muted) {
-      let embed = new Discord.MessageEmbed()
-        .setTitle("DiscordEval")
-        .setDescription(`Running...`)
-
-      editable = await message.channel.send(embed)
-    }
-  } else {
-    code = `() => {${code}}`
-  }
-
-  let out = null
+  let out: any
   try {
+    const startedAt = Date.now()
     out = await eval(code)()
+    duration = Date.now() - startedAt
   } catch (err) {
     out = err
+    failed = true
   }
 
-  if (muted) return
-
-  let classe = "void"
+  const type = typeof out
+  let _class = "void"
   if (out !== undefined && out !== null) {
-    classe = out.constructor.name
+    _class = out.constructor.name
   }
 
   let formatted = code
   try {
-    formatted = await prettify(code, "js")
+    formatted = prettify.format(code, "js", {
+      semi: false,
+      printWidth: 86,
+    })
   } catch (err) {}
 
-  let embed = new Discord.MessageEmbed()
-    .setTitle(`DiscordEval`)
-    .setDescription(
-      `**Classe** : \`\`${classe}\`\`\n` + `**Type** : \`${typeof out}\``
-    )
-    .addField(
-      `Code ↓`,
-      `\`\`\`js\n${formatted.length > 0 ? formatted : "void"}`.slice(0, 800) +
-        `\n\`\`\``
-    )
-
-  if (editable) {
-    await editable.edit(embed)
-  } else {
-    await message.channel.send(embed)
-  }
-
-  if (code.includes("return") || `${out}`.includes("Error")) {
-    embed = new Discord.MessageEmbed()
-    embed.setTitle(`Return ↓`)
-    embed.setDescription(
-      `\`\`\`js\n${`${out}`.length > 0 ? `${out}` : "void"}`.slice(0, 1800) +
-        `\n\`\`\``
-    )
-    await message.channel.send(embed)
+  return {
+    class: _class,
+    type,
+    input: formatted,
+    duration,
+    failed,
+    output: `${out}`.length > 0 ? `${out}` : "void",
   }
 }
+
+module.exports = evaluate
