@@ -12,11 +12,17 @@ interface Evaluated {
   failed: boolean
 }
 
-export default async function evaluate(code: string): Promise<Evaluated> {
+export default async function evaluate(
+  code: string,
+  ctx?: any,
+  ctxName = "ctx"
+): Promise<Evaluated> {
   const input = code
   code = codeInBlock.test(code) ? code.replace(codeInBlock, "$1") : code.trim()
   code = /\n|return/.test(code) ? code : `return ${code}`
-  code = `${code.includes("await") ? "async" : ""} () => {${code}}`.trim()
+  code = `${
+    code.includes("await") ? "async" : ""
+  } (${ctxName}) => {${code}}`.trim()
 
   let duration = 0
   let failed = false
@@ -24,7 +30,7 @@ export default async function evaluate(code: string): Promise<Evaluated> {
   let out: any
   try {
     const startedAt = Date.now()
-    out = await eval(code)()
+    out = await eval(code)(ctx)
     duration = Date.now() - startedAt
   } catch (err) {
     out = err
