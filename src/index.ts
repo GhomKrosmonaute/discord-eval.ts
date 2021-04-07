@@ -8,10 +8,12 @@ interface Evaluated {
   input: string
   output: string
   duration: number
+  evaluated: string
   failed: boolean
 }
 
 export default async function evaluate(code: string): Promise<Evaluated> {
+  const input = code
   code = codeInBlock.test(code) ? code.replace(codeInBlock, "$1") : code.trim()
   code = /\n|return/.test(code) ? code : `return ${code}`
   code = `${code.includes("await") ? "async" : ""} () => {${code}}`.trim()
@@ -46,10 +48,11 @@ export default async function evaluate(code: string): Promise<Evaluated> {
   return {
     class: _class,
     type,
-    input: formatted,
     duration,
     failed,
+    input,
     output: `${out}`.length > 0 ? `${out}` : "void",
+    evaluated: formatted,
   }
 }
 
