@@ -14,19 +14,29 @@ npm install ghom-eval
 ```ts
 import evaluate from "ghom-eval" // or with CommonJS
 
-console.log("4 + 5")
+evaluate("4 + 5")
 ```
 
-```js
-Returning = {
-  class: 'Number',
-  type: 'number',
-  duration: 0,
-  failed: false,
-  input: '4 + 5',
-  output: '9',
-  evaluated: ';() => {\n  return 4 + 5\n}\n',
+### Returning
+
+```json
+{
+  "class": "Number",
+  "type": "number",
+  "duration": 0,
+  "failed": false,
+  "input": "4 + 5",
+  "output": "9",
+  "evaluated": ";() => {\n  return 4 + 5\n}\n"
 }
 ```
+
+## Options
+
+`evaluate` method has 3 parameters.
+
+- code `string` *Evaluated code*
+- context `any` *Context value to inject in code* (default: `undefined`) 
+- contextName `string` *The access name of context* (default: `"context"`)
 
 Enjoy!
