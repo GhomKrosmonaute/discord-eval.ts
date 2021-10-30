@@ -12,7 +12,7 @@ npm install ghom-eval
 **Think of securing access because a malicious Eval can be devastating for your PC!**
 
 ```ts
-import evaluate from "ghom-eval" // or with CommonJS
+import { evaluate } from "ghom-eval" // or with CommonJS
 
 evaluate("4 + 5")
 ```
