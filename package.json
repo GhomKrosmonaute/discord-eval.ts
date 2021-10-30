@@ -1,10 +1,11 @@
 {
   "name": "ghom-eval",
-  "version": "1.0.3",
+  "version": "1.1.0",
   "description": "JS advanced evaluator",
   "main": "dist/index",
   "module": "dist/index.js",
   "types": "dist",
+  "type": "module",
   "dependencies": {
     "ghom-prettify": "^2.0.1"
   },
