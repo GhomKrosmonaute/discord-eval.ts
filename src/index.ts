@@ -2,7 +2,7 @@ import * as prettify from "ghom-prettify"
 
 const codeInBlock = /^```(?:js|javascript)?\s(.+[^\\])```$/is
 
-interface Evaluated {
+export interface Evaluated {
   class: string
   type: string
   input: string
@@ -12,7 +12,7 @@ interface Evaluated {
   failed: boolean
 }
 
-export default async function evaluate(
+export async function evaluate(
   code: string,
   ctx?: any,
   ctxName = "ctx"
@@ -61,5 +61,3 @@ export default async function evaluate(
     evaluated: formatted,
   }
 }
-
-module.exports = evaluate
