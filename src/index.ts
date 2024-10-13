@@ -78,15 +78,29 @@ export async function evaluate(
     // lang === "tsx" ||
     // lang === "jsx"
   ) {
-    try {
-      code = typescript.transpile(code, {
+    const { outputText, diagnostics } = typescript.transpileModule(code, {
+      compilerOptions: {
         // jsx: lang.endsWith("x") ? typescript.JsxEmit.React : undefined,
         ...options?.compilerOptions,
         noEmit: true,
         declaration: false,
-      })
-    } catch (err) {
-      out = err
+      },
+    })
+
+    code = outputText
+
+    if (diagnostics && diagnostics.length > 0) {
+      const message = diagnostics
+        .map((diagnostic) => {
+          const { line, character } =
+            diagnostic.file?.getLineAndCharacterOfPosition(
+              diagnostic.start!,
+            ) || { line: 0, character: 0 }
+          return `${diagnostic.messageText} (${line + 1},${character + 1})`
+        })
+        .join("\n")
+
+      out = new Error(`TypeScript compilation errors:\n${message}`)
       failed = true
     }
   }
@@ -108,7 +122,7 @@ export async function evaluate(
     _class = out.constructor.name
   }
 
-  if (typeof out === "object" && out !== null) {
+  if (type === "object" && out !== null) {
     out = util.inspect(out, options?.inspectOptions)
   }
 

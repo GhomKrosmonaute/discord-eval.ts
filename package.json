@@ -1,6 +1,6 @@
 {
   "name": "ghom-eval",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "JS evaluator",
   "main": "dist/index.js",
   "module": "dist/index.js",
