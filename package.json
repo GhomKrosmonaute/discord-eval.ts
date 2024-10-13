@@ -1,23 +1,26 @@
 {
   "name": "discord-eval.ts",
-  "version": "1.0.14",
+  "version": "1.1.0",
   "description": "An JS eval command for your Discord bots !",
-  "main": "dist/index",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
   "types": "dist",
+  "type": "module",
   "dependencies": {
-    "discord.js": "^12.3.1",
-    "ghom-prettify": "^1.1.1-bite"
+    "discord.js": "^14.16.3",
+    "ghom-eval": "^1.2.0"
   },
   "prettier": {
     "semi": false
   },
   "scripts": {
     "build": "tsc",
-    "prettier": "prettier --write src"
+    "format": "prettier --write src",
+    "prepublishOnly": "npm run build && npm run format"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/CamilleAbella/DiscordEval.js.git"
+    "url": "git+https://github.com/GhomKrosmonaute/discord-eval.ts.git"
   },
   "keywords": [
     "eval",
@@ -32,13 +35,11 @@
   "author": "ghom",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/CamilleAbella/DiscordEval.js/issues"
+    "url": "https://github.com/GhomKrosmonaute/discord-eval.ts/issues"
   },
-  "homepage": "https://github.com/CamilleAbella/DiscordEval.js#readme",
+  "homepage": "https://github.com/GhomKrosmonaute/discord-eval.ts/blob/main/readme.md",
   "devDependencies": {
-    "@types/node": "^14.14.7",
-    "@types/ws": "^7.4.0",
-    "prettier": "^2.1.2",
-    "typescript": "^4.0.5"
+    "@types/node": "^22.7.5",
+    "typescript": "^5.6.3"
   }
 }
