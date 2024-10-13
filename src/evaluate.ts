@@ -1,6 +1,6 @@
 import discord from "discord.js"
 import { evaluate as _, EvaluateOptions } from "ghom-eval"
-import { code } from "./utils"
+import { code } from "./utils.js"
 
 export interface FormatOptions {
   ctx?: Record<string, any>
