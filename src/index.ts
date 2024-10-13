@@ -1,6 +1,11 @@
-import * as prettify from "ghom-prettify"
+import * as util from "util"
+import * as prettier from "prettier"
+import typescript from "typescript"
 
-const codeInBlock = /^```(?:js|javascript)?\s(.+[^\\])```$/is
+// import React from "react"
+// import ReactDOMServer from "react-dom/server"
+
+const codeInBlock = /^```((?:js|ts)x?|typescript|javascript)?\s(.+[^\\])```$/is
 
 export interface Evaluated {
   class: string
@@ -12,30 +17,90 @@ export interface Evaluated {
   failed: boolean
 }
 
+export interface EvaluateOptions {
+  /**
+   * The context object to pass to the evaluated code.
+   */
+  ctx?: any
+
+  /**
+   * The name of the context object in the evaluated code.
+   */
+  ctxName?: string
+
+  /**
+   * The language of the code to evaluate.
+   */
+  lang?: "ts" | "js" | "typescript" | "javascript" // | "jsx" | "tsx"
+
+  /**
+   * The options to pass to Prettier for formatting the output.
+   */
+  prettierOptions?: prettier.Options
+
+  /**
+   * The options to pass to `util.inspect` for formatting the objects output.
+   */
+  inspectOptions?: util.InspectOptions
+
+  /**
+   * The options to pass to the TypeScript compiler.
+   */
+  compilerOptions?: typescript.CompilerOptions
+}
+
 export async function evaluate(
   code: string,
-  ctx?: any,
-  ctxName = "ctx"
+  options?: EvaluateOptions,
 ): Promise<Evaluated> {
   const input = code
-  code = codeInBlock.test(code) ? code.replace(codeInBlock, "$1") : code.trim()
-  code = /\n|return/.test(code) ? code : `return ${code}`
-  code = `${
-    code.includes("await") ? "async" : ""
-  } (${ctxName}) => {${code}}`.trim()
+  const result = codeInBlock.exec(code)
+  const lang = options?.lang || result?.[1] || "js"
+
+  const startedAt = Date.now()
 
   let duration = 0
   let failed = false
-
   let out: any
-  try {
-    const startedAt = Date.now()
-    out = await eval(code)(ctx)
-    duration = Date.now() - startedAt
-  } catch (err) {
-    out = err
-    failed = true
+
+  code = result ? result[2] : code.trim()
+
+  code = /^(?:return|throw|let|const|var)|\n|\b=\b/.test(code)
+    ? code
+    : `return ${code}`
+  code = `${
+    code.includes("await") ? "async" : ""
+  } (${options?.ctxName ?? "ctx"}${"" /*lang.endsWith("x") ? "" : ", React, ReactDOMServer"*/}) => {${code}}`.trim()
+
+  if (
+    lang === "ts" ||
+    lang === "typescript" // ||
+    // lang === "tsx" ||
+    // lang === "jsx"
+  ) {
+    try {
+      code = typescript.transpile(code, {
+        // jsx: lang.endsWith("x") ? typescript.JsxEmit.React : undefined,
+        ...options?.compilerOptions,
+        noEmit: true,
+        declaration: false,
+      })
+    } catch (err) {
+      out = err
+      failed = true
+    }
   }
+
+  if (!failed) {
+    try {
+      out = await eval(code)(options?.ctx /*, React, ReactDOMServer*/)
+    } catch (err) {
+      out = err
+      failed = true
+    }
+  }
+
+  duration = Date.now() - startedAt
 
   const type = typeof out
   let _class = "void"
@@ -43,13 +108,20 @@ export async function evaluate(
     _class = out.constructor.name
   }
 
+  if (typeof out === "object" && out !== null) {
+    out = util.inspect(out, options?.inspectOptions)
+  }
+
   let formatted = code
   try {
-    formatted = prettify.format(code, "js", {
+    const prettify = await import("ghom-prettify")
+    formatted = await prettify.format(code, {
+      lang: "js",
       semi: false,
       printWidth: 86,
+      ...options?.prettierOptions,
     })
-  } catch (err) {}
+  } catch {}
 
   return {
     class: _class,
